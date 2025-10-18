@@ -104,19 +104,28 @@
   },
   "settings": [
     {
+      "type": "checkbox",
+      "id": "active_cro",
+      "label": "Active CRO",
+      "default": false
+    },
+    {
       "type": "header",
       "content": "Time Period",
-      "info": "You can add the time like 00:00. For example, 12:30"
+      "info": "You can add the time like 00:00. For example, 12:30",
+      "visible_if": "{{ section.settings.active_cro == true }}"
     },
     {
       "type": "text",
       "id": "start_period",
-      "label": "Start Time"
+      "label": "Start Time",
+      "visible_if": "{{ section.settings.active_cro == true }}"
     },
     {
       "type": "text",
       "id": "end_period",
-      "label": "End Time"
+      "label": "End Time",
+      "visible_if": "{{ section.settings.active_cro == true }}"
     },
     {
       "type": "product",
