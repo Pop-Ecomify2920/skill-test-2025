@@ -5,7 +5,11 @@
   {% assign product_title = '<p>' | append: text | append: '</p>' %}
   {% render 'text', fallback_text: product_title, block: block %}
 {% elsif closest.product != blank %}
-  {% assign product_title = '<p>' | append: closest.product.title | append: '</p>' %}
+  {% if block.settings.title != blank %}
+    {% assign product_title = '<p>' | append: block.settings.title | append: '</p>' %}
+  {% else %}
+    {% assign product_title = '<p>' | append: closest.product.title | append: '</p>' %}
+  {% endif %}
   <a
     class="contents user-select-text"
     ref="productTitleLink"
@@ -21,8 +25,10 @@
   "tag": null,
   "settings": [
     {
-      "type": "paragraph",
-      "content": "t:content.resource_reference_product_title"
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "Title",
+      "info": "If this input is blank, then the default title would be displayed."
     },
     {
       "type": "header",

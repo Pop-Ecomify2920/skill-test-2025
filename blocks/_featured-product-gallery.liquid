@@ -55,6 +55,12 @@
       "default": "contain",
       "label": "t:settings.limit_media_to_screen_height",
       "visible_if": "{{ block.settings.image_ratio == 'adapt' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "If you don't select the specific image here, the main image of the default product would be selected automatically."
     }
   ]
 }

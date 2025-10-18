@@ -139,58 +139,64 @@
       endif
 
       capture slides
-        for media in media_list_to_show
-          assign loading = 'lazy'
-          assign sizes = 'auto, ' | append: image_sizes
+        if block_settings.image == blank
+          for media in media_list_to_show
+            assign loading = 'lazy'
+            assign sizes = 'auto, ' | append: image_sizes
 
-          assign hidden = false
-          assign attributes = ''
-          if variant_images contains media.src
-            assign attributes = 'variant-image'
-            if combined_listing_count > 0
-              # hide all variant images of combined listings unless it's the first image or there are no generic media
-              unless forloop.first and media.src == selected_variant_image or generic_media_size == 0
+            assign hidden = false
+            assign attributes = ''
+            if variant_images contains media.src
+              assign attributes = 'variant-image'
+              if combined_listing_count > 0
+                # hide all variant images of combined listings unless it's the first image or there are no generic media
+                unless forloop.first and media.src == selected_variant_image or generic_media_size == 0
+                  assign hidden = true
+                endunless
+              elsif has_applied_colour_filter
+                # with colour filters, hide all variant images unless the image is the selected_variant
+                unless media.src == selected_variant_image
+                  assign hidden = true
+                endunless
+              elsif forloop.first == false
+                # hide all variant images that aren't the first one (when there are no combined listings or colour filters applied)
                 assign hidden = true
-              endunless
-            elsif has_applied_colour_filter
-              # with colour filters, hide all variant images unless the image is the selected_variant
-              unless media.src == selected_variant_image
-                assign hidden = true
-              endunless
-            elsif forloop.first == false
-              # hide all variant images that aren't the first one (when there are no combined listings or colour filters applied)
-              assign hidden = true
+              endif
             endif
-          endif
 
-          # Performance improvement: don't render more than 5 visible images into the slideshow
-          # We'll keep the images that we need for the variant images and hover next.
-          if forloop.first
-            assign visible_slide_count = 0
-          endif
-          unless hidden
-            assign visible_slide_count = visible_slide_count | plus: 1
-          endunless
-          if hidden == false and visible_slide_count > max_visible_slide_count
-            continue
-          endif
+            # Performance improvement: don't render more than 5 visible images into the slideshow
+            # We'll keep the images that we need for the variant images and hover next.
+            if forloop.first
+              assign visible_slide_count = 0
+            endif
+            unless hidden
+              assign visible_slide_count = visible_slide_count | plus: 1
+            endunless
+            if hidden == false and visible_slide_count > max_visible_slide_count
+              continue
+            endif
 
-          if forloop.first and section.index == null or section.index < 5
-            assign loading = 'eager'
-            assign sizes = image_sizes
-          endif
+            if forloop.first and section.index == null or section.index < 5
+              assign loading = 'eager'
+              assign sizes = image_sizes
+            endif
 
-          assign class = 'product-media-container media-fit product-media-container--[media_type]' | replace: '[media_type]', media.media_type
-          if constrain_to_viewport
-            assign class = class | append: ' constrain-height'
-          endif
+            assign class = 'product-media-container media-fit product-media-container--[media_type]' | replace: '[media_type]', media.media_type
+            if constrain_to_viewport
+              assign class = class | append: ' constrain-height'
+            endif
 
-          capture slideshow_children
-            render 'product-media', media: media, sizes: sizes, loading: loading, preview_image_only: true
-          endcapture
+            capture slideshow_children
+              render 'product-media', media: media, sizes: sizes, loading: loading, preview_image_only: true
+            endcapture
 
-          render 'slideshow-slide', slide_id: media.id, index: forloop.index, hidden: hidden, class: class, attributes: attributes, children: slideshow_children, media_fit: media_fit
-        endfor
+            render 'slideshow-slide', slide_id: media.id, index: forloop.index, hidden: hidden, class: class, attributes: attributes, children: slideshow_children, media_fit: media_fit
+          endfor
+        else
+          assign media = block_settings.image
+
+          render 'product-media', media: media, sizes: sizes, loading: loading, preview_image_only: true
+        endif
       endcapture
 
       assign slideshow_attributes = 'data-generic-media-size="[generic_media_size]"' | replace: '[generic_media_size]', generic_media_size

@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "pull": "shopify theme pull --password shptka_ebdf9bb224be842ad643d128cb4051ce --store skill-test-2025 --theme 155286569213",
-    "dev": "shopify theme pull --password shptka_ebdf9bb224be842ad643d128cb4051ce --store skill-test-2025"
+    "dev": "shopify theme dev --password shptka_ebdf9bb224be842ad643d128cb4051ce --store skill-test-2025",
+    "sync": "shopify theme dev --password shptka_ebdf9bb224be842ad643d128cb4051ce --store skill-test-2025 --theme-editor-sync"
   },
   "author": "",
   "license": "ISC"

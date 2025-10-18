@@ -1,45 +1,61 @@
+{% assign start_time_str = section.settings.start_period %}
+{% assign end_time_str = section.settings.end_period %}
 
+{% assign current_hour = 'now' | date: '%H' | plus: 0 %}
+{% assign current_minute = 'now' | date: '%M' | plus: 0 %}
+{% assign current_total_minutes = current_hour | times: 60 | plus: current_minute %}
 
-<script type="application/ld+json">
-  {{ section.settings.product | structured_data }}
-</script>
+{% assign start_hour = start_time_str | split: ':' | first | plus: 0 %}
+{% assign start_minute = start_time_str | split: ':' | last | plus: 0 %}
+{% assign start_total_minutes = start_hour | times: 60 | plus: start_minute %}
 
-<div class="section-background color-{{ section.settings.color_scheme }}"></div>
-<div
-  class="
-    featured-product-section
-    section
-    section--full-width
-    color-{{ section.settings.color_scheme }}
-  "
->
+{% assign end_hour = end_time_str | split: ':' | first | plus: 0 %}
+{% assign end_minute = end_time_str | split: ':' | last | plus: 0 %}
+{% assign end_total_minutes = end_hour | times: 60 | plus: end_minute %}
+
+{% if current_total_minutes >= start_total_minutes and current_total_minutes <= end_total_minutes %}
+
+  <script type="application/ld+json">
+    {{ section.settings.product | structured_data }}
+  </script>
+
+  <div class="section-background color-{{ section.settings.color_scheme }}"></div>
   <div
-    class="section-content-wrapper spacing-style size-style border-style"
-    style="
-      {% render 'spacing-style', settings: section.settings %}
-      --media-height: 100%;
-      {% if request.visual_preview_mode %}
-        --visual-preview--height: 100%;
-      {% endif %}
+    class="
+      featured-product-section
+      section
+      section--full-width
+      color-{{ section.settings.color_scheme }}
     "
   >
-    {% capture featured_product_media %}
-      {% content_for 'block', type: '_media-without-appearance', id: 'media', closest.product: section.settings.product %}
-    {% endcapture %}
+    <div
+      class="section-content-wrapper spacing-style size-style border-style"
+      style="
+        {% render 'spacing-style', settings: section.settings %}
+        --media-height: 100%;
+        {% if request.visual_preview_mode %}
+          --visual-preview--height: 100%;
+        {% endif %}
+      "
+    >
+      {% capture featured_product_media %}
+        {% content_for 'block', type: '_media-without-appearance', id: 'media', closest.product: section.settings.product %}
+      {% endcapture %}
 
-    {% capture featured_product_content %}
-      {% content_for 'block', type: '_featured-product', id: 'featured-product', closest.product: section.settings.product %}
-    {% endcapture %}
+      {% capture featured_product_content %}
+        {% content_for 'block', type: '_featured-product', id: 'featured-product', closest.product: section.settings.product %}
+      {% endcapture %}
 
-    {% if section.settings.layout == 'media-left' %}
-      {{ featured_product_media }}
-      {{ featured_product_content }}
-    {% else %}
-      {{ featured_product_content }}
-      {{ featured_product_media }}
-    {% endif %}
+      {% if section.settings.layout == 'media-left' %}
+        {{ featured_product_media }}
+        {{ featured_product_content }}
+      {% else %}
+        {{ featured_product_content }}
+        {{ featured_product_media }}
+      {% endif %}
+    </div>
   </div>
-</div>
+{% endif %}
 
 {% stylesheet %}
   .featured-product-section .section-content-wrapper {
@@ -87,6 +103,21 @@
     "groups": ["header"]
   },
   "settings": [
+    {
+      "type": "header",
+      "content": "Time Period",
+      "info": "You can add the time like 00:00. For example, 12:30"
+    },
+    {
+      "type": "text",
+      "id": "start_period",
+      "label": "Start Time"
+    },
+    {
+      "type": "text",
+      "id": "end_period",
+      "label": "End Time"
+    },
     {
       "type": "product",
       "id": "product",
