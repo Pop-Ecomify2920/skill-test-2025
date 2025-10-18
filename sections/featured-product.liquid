@@ -13,8 +13,7 @@
 {% assign end_minute = end_time_str | split: ':' | last | plus: 0 %}
 {% assign end_total_minutes = end_hour | times: 60 | plus: end_minute %}
 
-{% if current_total_minutes >= start_total_minutes and current_total_minutes <= end_total_minutes %}
-
+{% capture cro_section %}
   <script type="application/ld+json">
     {{ section.settings.product | structured_data }}
   </script>
@@ -55,6 +54,14 @@
       {% endif %}
     </div>
   </div>
+{% endcapture %}
+
+{% if section.settings.active_cro %}
+  {% if current_total_minutes >= start_total_minutes and current_total_minutes <= end_total_minutes %}
+    {{ cro_section }}
+  {% endif %}    
+{% else %}
+  {{ cro_section }}
 {% endif %}
 
 {% stylesheet %}
