@@ -180,6 +180,7 @@
       },
       "name": "CRO: Product highlight 1",
       "settings": {
+        "active_cro": false,
         "start_period": "00:00",
         "end_period": "11:59",
         "product": "the-collection-snowboard-hydrogen",
@@ -281,6 +282,7 @@
       },
       "name": "CRO: Product highlight 2",
       "settings": {
+        "active_cro": true,
         "start_period": "12:00",
         "end_period": "23:59",
         "product": "the-multi-managed-snowboard",
